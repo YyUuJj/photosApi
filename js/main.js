@@ -1,33 +1,45 @@
-// fetch('https://api.api-ninjas.com/v1/cats?shedding=2', {
-//     method: "GET",
-//     headers: {
-//         'X-Api-Key': 'amalbOI5x7BGt+FExLtoYg==aLvichKbtJSqSPix'
-//     }
-// })
-// .then((response) => response.json())
-// .then(json => createCat(json[0])
-// ).catch(() => {
-//     console.log("Ошибка");
-// })
-
-// function createCat(data) {
-//     console.log(data);
-//     let b = document.createElement('img');
-//     b.src = data.image_link;
-//     document.body.append(b);
-// }
 
 let apiKey = '563492ad6f917000010000013e4d2581c9e34b23a20d0b1a330e3166';
 
 
-fetch("https://api.pexels.com/v1/search?query=nature", {
-    headers: {
-        'Authorization': apiKey
-    }
-})
-.then(response => response.json())
-.then(json => showPhotos(json.photos));
+let photoTheme = document.querySelector('#picSelect');
+let searchBut = document.querySelector('#searchPic');
 
+searchBut.addEventListener('click', () => {
+    removePhotos();
+});
+
+
+function getPhotos(theme) {
+
+
+    fetch(`https://api.pexels.com/v1/search?query=${theme}`, {
+        headers: {
+            'Authorization': apiKey
+        }
+    })
+    .then(response => response.json())
+    .then(json => showPhotos(json.photos));
+}
+
+function removePhotos() {
+    let promise = new Promise((resolve, reject) => {
+        let mainBlock = document.querySelector('.photos__blocks');
+        resolve(mainBlock);
+    }).then((mainBlock) => {
+        if(mainBlock.childNodes.length>1){
+            let blocks = document.querySelectorAll('.photo__block');
+            blocks.forEach((block) => {
+                block.remove();
+            })
+        }
+    }).finally(() => {
+        console.log("Сработал");
+        getPhotos(photoTheme.value);
+    });
+
+
+}
 
 function showPhotos(data) {
     data.forEach((key) => {

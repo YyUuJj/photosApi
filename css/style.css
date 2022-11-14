@@ -3,12 +3,50 @@
     padding: 0;
 }
 
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.search__block {
+    margin-top: 15px;
+}
+
+#picSelect {
+    background-color: white;
+    width: 200px;
+    height: 50px;
+    text-align: center;
+    color: black;
+    border: none;
+    border-radius: 0px;
+    border: solid black 1px;
+}
+
+#picSelect:focus {
+    border: solid black 1px;
+
+}
+
+#searchPic {
+    background-color: black;
+    color: white;
+    height: 52px;
+    width: 100px;
+}
+
+.photos {
+    width: 100%;
+}
+
 .photos__title {
     height: 100px;
     display: flex;
     justify-content: center;
     align-items:center;
 }
+
 
 .photo__img {
     height: 400px;
