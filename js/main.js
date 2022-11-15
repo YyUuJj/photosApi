@@ -1,6 +1,6 @@
 
 let apiKey = '563492ad6f917000010000013e4d2581c9e34b23a20d0b1a330e3166';
-
+let nextLink = '';
 
 let photoTheme = document.querySelector('#picSelect');
 let searchBut = document.querySelector('#searchPic');
@@ -19,7 +19,66 @@ function getPhotos(theme) {
         }
     })
     .then(response => response.json())
-    .then(json => showPhotos(json.photos));
+    .then(json => {
+        console.log(json);
+        console.log(nextLink);
+        nextLink = json.next_page;
+        console.log(nextLink + "!!!");
+        return showPhotos(json.photos),  createPages(json.page, json.per_page);});
+}
+
+function changePhotosPage(numberPage, previousPage) {
+    console.log(numberPage);
+    console.log(previousPage);
+    console.log(nextLink.replace(previousPage, numberPage));
+}
+
+function createPages(currentPage, amountPage) {
+    let changeBlock = document.querySelector('.change__block');
+
+    if(changeBlock.childNodes.length > 0) {
+        clearPages();
+    }
+    for(let i = 1; i <= amountPage; i++) {
+        let newPage = document.createElement('div'),
+            numberPage = document.createElement('span');
+
+        numberPage.textContent = i;
+        newPage.append(numberPage);
+        newPage.addEventListener('click', changePage);
+
+        changeBlock.append(newPage);
+        if(i == +currentPage) {
+            newPage.classList.add('current__page');
+        } else {
+            newPage.classList.add('page');
+        }
+    }
+}
+
+function changePage(event) {;
+    let previousPage = document.querySelector('.current__page').textContent; // Номер предыдущей страницы
+    clearCurrentPage();
+    if(event.target.tagName == "DIV") {
+        event.target.classList.add('current__page');
+        changePhotosPage(event.target.textContent, previousPage);
+    }else {
+        event.target.parentNode.classList.add('current__page');
+        changePhotosPage(event.target.textContent, previousPage);
+    }
+}
+
+function clearCurrentPage() {
+    let pages = document.querySelectorAll('.current__page');
+    pages.forEach((page) => {
+        page.classList.remove('current__page');
+        page.classList.add('page');
+    })
+}
+
+function clearPages(mainBlock) {
+    let blocks = document.querySelectorAll('.page').forEach((block) => block.remove());
+
 }
 
 function removePhotos() {
@@ -42,6 +101,7 @@ function removePhotos() {
 }
 
 function showPhotos(data) {
+    
     data.forEach((key) => {
         createNewPost(key);
         console.log(key);
